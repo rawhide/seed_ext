@@ -1,5 +1,50 @@
-require "seed_ext/version"
+# encoding: utf-8
+require 'active_record'
+require 'csv'
+module Railstar
+  module ActiveRecordExt
+    module ClassMethods
+      def truncation(sym=:yml, file_dir='db/seeds')
+        table_name = self.table_name || self.to_s.underscore.pluralize
+        file_name = "#{table_name}.#{sym.to_s}"
+        file_path = File.join(file_dir, file_name)
+        raise "#{file_path} file not found."  unless File.exist?(file_path)
+        self.transaction do
+          self.truncation!
+          self.send("create_from_#{sym.to_s}", file_path)
+        end
+      end
 
-module SeedExt
-  # Your code goes here...
+      def truncation!
+        case self.connection.adapter_name
+        when "SQLite"
+          self.connection.execute("DELETE FROM `#{self.table_name}`")
+        else
+          self.connection.execute("TRUNCATE TABLE #{self.table_name}")
+        end
+      end
+
+      def create_from_yml(file_path)
+        YAML.load_file(file_path).each do |value|
+         self.create value.is_a?(Array) ? value.last : value
+        end
+      end
+
+      def create_from_csv(file_path)
+        CSV.foreach(file_path, :headers => true) {|row| self.create Hash[*row.to_a.flatten] }
+      end
+
+    end
+
+    module InstanceMethods
+    end
+
+    def self.included(base)
+      base.extend ClassMethods
+      base.class_eval do
+        include InstanceMethods
+      end
+    end
+  end
 end
+ActiveRecord::Base.send(:include, Railstar::ActiveRecordExt)
