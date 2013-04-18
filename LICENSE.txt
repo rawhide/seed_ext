@@ -1,4 +1,4 @@
-Copyright (c) 2013 nanbu
+Copyright (c) 2013 RAWHIDE. Co., Ltd.
 
 MIT License
 

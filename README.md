@@ -16,22 +16,25 @@ And then execute:
 
 ### In db/seeds/users.yml
 
-    user3:
-      id: 3
-      name: 担当者3
+    user1:
+      id: 1
+      name: user1
       sex: 0
 
-    user4:
-      id: 4
-      name: 担当者4
+    user2:
+      id: 2
+      name: user2
       sex: 1
 
 ### In db/migrate/xxxx_create_users.rb
-
-    create_table :users, :force => true do |t|
-      t.column :name, :string
-      t.column :sex, :integer
-      t.timestamp
+    class CreateUsers < ActiveRecord::Migration
+      def change
+        create_table :users do |t|
+          t.string :name
+          t.integer :sex
+          t.timestamps
+        end
+      end
     end
 
 ### In app/models/user.rb
@@ -56,8 +59,8 @@ Users table will be truncated and be loaded data from yml file.
 ### In db/seeds/users.csv
 
     id,name,sex
-    1,担当者１,1
-    2,担当者２,0
+    1,user1,0
+    2,user2,1
 
 ### In db/seeds.rb
 
@@ -68,12 +71,18 @@ Users table will be truncated and be loaded data from yml file.
 ### In db/fixures/users.csv
 
     id,name,sex
-    1,担当者１,1
-    2,担当者２,0
+    1,user1,0
+    2,user2,1
 
 ### In db/seeds.rb
 
-    User.truncatio(:csv, 'db/fixures')
+    User.truncation(:csv, 'db/fixures')
+
+### You can just truncate
+
+    User.truncation!
+
+Users table will be truncated.(supporting for sqlite3/mysql2/postgresql/sqlserver)
 
 ## Contributing
 
