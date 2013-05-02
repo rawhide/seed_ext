@@ -64,7 +64,7 @@ Users table will be truncated and be loaded data from yml file.
 
 ### In db/seeds.rb
 
-    User.truncatio(:csv)
+    User.truncation(:csv)
 
 ## Customizing
 
