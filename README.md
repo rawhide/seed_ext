@@ -78,6 +78,10 @@ Users table will be truncated and be loaded data from yml file.
 
     User.truncation(:csv, 'db/fixures')
 
+### If Model is STI
+    
+    User.truncation(:csv, 'db/fixures', true)
+
 ### You can just truncate
 
     User.truncation!
