@@ -44,6 +44,9 @@ describe Railstar::SeedExt do
       end
 
       describe 'check loaded data' do
+        before { User.truncation!
+                 User.truncation(:yml, "spec/db/seeds") 
+               }
         subject(:users) { 
           { first: User.first, last: User.last }
         }
