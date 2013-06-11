@@ -1,9 +1,9 @@
 user3:
   id: 3
-  name: 担当者3
+  name: admin_from_yml1
   sex: 0
 
 user4:
   id: 4
-  name: 担当者4
+  name: admin_from_yml2
   sex: 1
