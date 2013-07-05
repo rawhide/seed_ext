@@ -1,8 +1,11 @@
 # encoding: utf-8
 require 'active_record'
+require 'active_support'
 require 'csv'
 module Railstar
-  module ActiveRecordExt
+  module SeedExt
+    extend ActiveSupport::Concern
+
     module ClassMethods
       def truncation(sym=:yml, file_dir='db/seeds')
         table_name = self.table_name || self.to_s.underscore.pluralize
@@ -33,18 +36,14 @@ module Railstar
       def create_from_csv(file_path)
         CSV.foreach(file_path, :headers => true) {|row| self.create Hash[*row.to_a.flatten] }
       end
-
     end
 
-    module InstanceMethods
-    end
+    module InstanceMethods; end
 
-    def self.included(base)
-      base.extend ClassMethods
-      base.class_eval do
-        include InstanceMethods
-      end
+    included do
+      extend ClassMethods
+      include InstanceMethods
     end
   end
 end
-ActiveRecord::Base.send(:include, Railstar::ActiveRecordExt)
+ActiveRecord::Base.send(:include, Railstar::SeedExt)
