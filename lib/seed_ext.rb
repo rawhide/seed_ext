@@ -7,9 +7,9 @@ module Railstar
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def truncation(sym=:yml, file_dir='db/seeds')
+      def truncation(sym=:yml, file_dir='db/seeds', sti_flag=false)
         table_name = self.table_name || self.to_s.underscore.pluralize
-        file_name = "#{table_name}.#{sym.to_s}"
+        sti_flag ? file_name = "#{name.to_s.underscore.pluralize}.#{sym.to_s}" : file_name = "#{table_name}.#{sym.to_s}"
         file_path = File.join(file_dir, file_name)
         raise "#{file_path} file not found."  unless File.exist?(file_path)
         self.transaction do
@@ -19,6 +19,7 @@ module Railstar
       end
 
       def truncation!
+        return unless self.symbolized_sti_name == self.symbolized_base_class
         case self.connection.adapter_name
         when "SQLite"
           self.connection.execute("DELETE FROM `#{self.table_name}`")
