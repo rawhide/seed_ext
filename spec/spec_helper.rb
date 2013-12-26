@@ -1,7 +1,7 @@
 require 'rake'
 require './lib/seed_ext'
 
-ENV["DB"] ||= 'mysql2'
+ENV["DB"] ||= 'sqlite3'
 puts "Using #{ENV["DB"]} to run the tests."
 require File.dirname(__FILE__) + "/connections/#{ENV["DB"]}.rb"
 
